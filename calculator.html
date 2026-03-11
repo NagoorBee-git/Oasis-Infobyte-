@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Professional Pastel Calculator</title>
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+/* --- Pastel Pink Theme Variables --- */
+:root {
+    /* Main Body Colors */
+    --calc-bg: #F2DCD9; /* Blush Pink Main Body */
+    
+    /* Display Area */
+    --display-bg: #E5E5E5; /* Light Gray */
+    --text-color: #333333; /* Charcoal / Dark Gray */
+    
+    /* Button Colors */
+    --btn-num-bg: #EDA3A9; /* Rose Pink */
+    --btn-num-hover: #F5B7BA;
+    --btn-num-text: #4A2020; 
+    
+    --btn-op-bg: #E88787; /* Light Coral Pink */
+    --btn-op-hover: #F09999;
+    --btn-op-text: #FFFFFF;
+    
+    --btn-func-bg: #EED6D6; /* Soft Pink */
+    --btn-func-hover: #F5E5E5;
+    --btn-func-text: #5C3A3A;
+    
+    /* Outlines / Design Lines */
+    --decorative-line: #CFA4A9; /* Dusty Rose */
+    --btn-border: #D5A8AC; /* Muted Pink */
+    
+    --shadow: 0 15px 40px rgba(213, 168, 172, 0.5);
+}
+
+/* --- Base & Reset --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff0f3; /* Fallback */
+    
+    /* NEW: Modern Mesh Gradient Background */
+    background: 
+        radial-gradient(at 0% 0%, hsla(340, 100%, 94%, 1) 0%, transparent 50%),
+        radial-gradient(at 100% 0%, hsla(15, 100%, 90%, 1) 0%, transparent 50%),
+        radial-gradient(at 100% 100%, hsla(320, 80%, 90%, 1) 0%, transparent 50%),
+        radial-gradient(at 0% 100%, hsla(350, 90%, 92%, 1) 0%, transparent 50%),
+        radial-gradient(at 50% 50%, hsla(340, 60%, 96%, 1) 0%, transparent 50%);
+}
+
+/* --- Calculator Container --- */
+.calculator {
+    background: var(--calc-bg);
+    padding: 25px;
+    border-radius: 30px;
+    box-shadow: var(--shadow);
+    width: 340px;
+    position: relative;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+/* --- Header & Decorative Lines --- */
+.header {
+    text-align: center;
+    margin-bottom: 15px;
+    padding: 0 5px;
+    border-bottom: 2px solid var(--decorative-line); /* Dusty Rose Line */
+    padding-bottom: 15px;
+}
+
+.brand {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-color);
+    opacity: 0.7;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+
+/* --- Display --- */
+.display-container {
+    background: var(--display-bg); /* Light Gray */
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 20px;
+    text-align: right;
+    min-height: 90px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    box-shadow: inset 2px 2px 5px rgba(0,0,0,0.05);
+}
+
+#display {
+    background: transparent;
+    border: none;
+    color: var(--text-color); /* Charcoal */
+    font-size: 44px;
+    font-weight: 400;
+    text-align: right;
+    width: 100%;
+    outline: none;
+    transition: font-size 0.15s ease;
+}
+
+/* --- Buttons --- */
+.keys {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+}
+
+button {
+    height: 65px;
+    border: 1px solid var(--btn-border); /* Muted Pink Border */
+    border-radius: 18px;
+    font-size: 22px;
+    font-weight: 500;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.15s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+
+button:active {
+    transform: scale(0.96);
+    filter: brightness(0.95);
+}
+
+/* Number Buttons - Rose Pink */
+.btn-number {
+    background: var(--btn-num-bg);
+    color: var(--btn-num-text);
+}
+
+.btn-number:hover {
+    background: var(--btn-num-hover);
+}
+
+/* Operator Buttons - Light Coral Pink */
+.btn-operator {
+    background: var(--btn-op-bg);
+    color: var(--btn-op-text);
+    font-weight: 600;
+}
+
+.btn-operator:hover {
+    background: var(--btn-op-hover);
+}
+
+/* Function Buttons - Soft Pink */
+.btn-function {
+    background: var(--btn-func-bg);
+    color: var(--btn-func-text);
+}
+
+.btn-function:hover {
+    background: var(--btn-func-hover);
+}
+
+/* Zero Button */
+.span-2 {
+    grid-column: span 2;
+    border-radius: 18px;
+    text-align: left;
+    padding-left: 30px;
+}
+
+/* Focus accessibility */
+button:focus-visible {
+    outline: 2px solid var(--text-color);
+    outline-offset: 2px;
+}
+
+</style>
+</head>
+<body>
+
+<div class="calculator">
+    
+    <!-- Header with Decorative Line -->
+    <div class="header">
+        <span class="brand">Calculator</span>
+    </div>
+
+    <!-- Display Area -->
+    <div class="display-container">
+        <input type="text" id="display" disabled value="0">
+    </div>
+
+    <!-- Buttons Grid -->
+    <div class="keys">
+        <button class="btn-function" onclick="clearDisplay()">AC</button>
+        <button class="btn-function" onclick="toggleSign()">±</button>
+        <button class="btn-function" onclick="appendValue('%')">%</button>
+        <button class="btn-operator" onclick="appendValue('/')">÷</button>
+
+        <button class="btn-number" onclick="appendValue('7')">7</button>
+        <button class="btn-number" onclick="appendValue('8')">8</button>
+        <button class="btn-number" onclick="appendValue('9')">9</button>
+        <button class="btn-operator" onclick="appendValue('*')">×</button>
+
+        <button class="btn-number" onclick="appendValue('4')">4</button>
+        <button class="btn-number" onclick="appendValue('5')">5</button>
+        <button class="btn-number" onclick="appendValue('6')">6</button>
+        <button class="btn-operator" onclick="appendValue('-')">−</button>
+
+        <button class="btn-number" onclick="appendValue('1')">1</button>
+        <button class="btn-number" onclick="appendValue('2')">2</button>
+        <button class="btn-number" onclick="appendValue('3')">3</button>
+        <button class="btn-operator" onclick="appendValue('+')">+</button>
+
+        <button class="btn-number span-2" onclick="appendValue('0')">0</button>
+        <button class="btn-number" onclick="appendValue('.')">.</button>
+        <button class="btn-operator" onclick="calculate()">=</button>
+    </div>
+
+</div>
+
+<script>
+const display = document.getElementById("display");
+
+function appendValue(value) {
+    if (display.value === "Error" || (display.value === "0" && value !== '.')) {
+        display.value = "";
+    }
+    const lastChar = display.value.slice(-1);
+    const operators = ['+', '-', '*', '/', '%'];
+    
+    if (operators.includes(value) && operators.includes(lastChar)) {
+        display.value = display.value.slice(0, -1) + value;
+    } else {
+        display.value += value;
+    }
+    resizeFont();
+}
+
+function clearDisplay() {
+    display.value = "0";
+    display.style.fontSize = "44px";
+}
+
+function deleteLast() {
+    if (display.value.length > 1) {
+        display.value = display.value.slice(0, -1);
+    } else {
+        display.value = "0";
+    }
+    resizeFont();
+}
+
+function toggleSign() {
+    if (display.value !== "0" && display.value !== "Error") {
+        display.value = display.value.startsWith('-') 
+            ? display.value.slice(1) 
+            : '-' + display.value;
+    }
+}
+
+function calculate() {
+    try {
+        let expression = display.value;
+        expression = expression.replace(/%/g, '/100');
+        let result = Function('"use strict"; return (' + expression + ')')();
+        if (!isFinite(result)) {
+            display.value = "Error";
+        } else {
+            display.value = parseFloat(result.toFixed(8)).toString();
+        }
+    } catch (e) {
+        display.value = "Error";
+    }
+    resizeFont();
+}
+
+function resizeFont() {
+    if (display.value.length > 9) {
+        const newSize = Math.max(20, 44 - (display.value.length * 1.5));
+        display.style.fontSize = newSize + "px";
+    } else {
+        display.style.fontSize = "44px";
+    }
+}
+
+document.addEventListener('keydown', (e) => {
+    const key = e.key;
+    if (/[\d+\-*/.%]/.test(key)) appendValue(key);
+    else if (key === 'Enter') { e.preventDefault(); calculate(); }
+    else if (key === 'Backspace') deleteLast();
+    else if (key === 'Escape') clearDisplay();
+});
+
+clearDisplay();
+</script>
+</body>
+</html>
